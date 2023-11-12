@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef QT_CORE_LIB
+
 #include <QByteArray>
+
+#endif /* ifdef(QT_CORE_LIB) */
 
 #define IV_SIZE 16
 typedef unsigned int  uint;
@@ -18,8 +22,12 @@ public:
     
     AES(const KeyLength& key_length, const Mode& mode);
     
+    #ifdef QT_CORE_LIB
+    
     void   Encrypt(QByteArray& data, const QByteArray& key, QByteArray iv = QByteArray());
     void   Decrypt(QByteArray& data, const QByteArray& key, QByteArray iv = QByteArray());
+    
+    #endif /* ifdef(QT_CORE_LIB) */
     
     uchar* Encrypt(uchar* data, uint data_size, const uchar* key, uchar* iv = nullptr);
     uchar* Decrypt(uchar* data, uint data_size, const uchar* key, const uchar* iv = nullptr);

@@ -86,10 +86,10 @@ static int randombytes_win32_randombytes(void *buf, const size_t n) {
 
 #if defined(__linux__) && defined(SYS_getrandom)
 static int randombytes_linux_randombytes_getrandom(void *buf, size_t n) {
+
     size_t offset = 0, chunk;
     long int ret;
     while (n > 0) {
-        /* getrandom does not allow chunks larger than 33554431 */
         chunk = n <= 33554431 ? n : 33554431;
         do {
             ret = syscall(SYS_getrandom, (char *)buf + offset, chunk, 0);
@@ -128,7 +128,8 @@ static int randombytes_linux_wait_for_entropy(int device) {
     struct pollfd pfd;
     int fd;
     FILE *proc_file;
-    int retcode, retcode_error = 0;
+    int retcode,
+        retcode_error = 0;
     int entropy = 0;
     
     retcode = randombytes_linux_read_entropy_ioctl(device, &entropy);
@@ -279,11 +280,12 @@ int randombytes(uint8_t *buf, size_t n) {
 }
 
 #ifdef QT_CORE_LIB
+
 #include <QByteArray>
 inline QByteArray randombytes(int length = 16) {
-    QByteArray out;
-    out.resize(length);
-    randombytes((uint8_t*)out.data(), length);
-    return out;
+    char* out = new char[length];
+    randombytes((uint8_t*)out, length);
+    return QByteArray(out, length);
 };
-#endif /* defined(QT_CORE_LIB) */
+
+#endif /* ifdef(QT_CORE_LIB) */

@@ -26,6 +26,8 @@ AES::AES(const KeyLength& key_length, const Mode& mode)
     }
 }
 
+#ifdef QT_CORE_LIB
+
 void AES::Encrypt(QByteArray &data, const QByteArray &key, QByteArray iv) {
     qint64 data_size = data.size();
     data.insert(0, (char*)(&data_size), sizeof(qint64));
@@ -62,6 +64,8 @@ void AES::Decrypt(QByteArray &data, const QByteArray &key, QByteArray iv) {
     data.remove(0, sizeof(qint64));
     data.resize(data_size);
 }
+
+#endif /* ifdef(QT_CORE_LIB) */
 
 uchar* AES::Encrypt(uchar *data, uint data_size, const uchar *key, uchar *iv) {
     switch(mode) {
